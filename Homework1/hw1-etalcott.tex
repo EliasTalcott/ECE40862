@@ -1,0 +1,88 @@
+\documentclass[11pt]{article}
+
+
+%%% Packages
+%%
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[margin = 1in, headheight = 13.6pt]{geometry}
+\usepackage[linktoc=all]{hyperref}
+%%
+%%%
+
+
+%%% Formatting
+%%
+\parindent 0em
+\parskip 1em
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[L]{\slshape\MakeUppercase{{\myTitle}}}
+\fancyhead[R]{\slshape{\myName}}
+\fancyfoot[C]{\thepage}
+%%
+%%%
+
+
+%%% User defined variables
+%%
+\def \myTitle {ECE 40862 Homework 1}
+\def \myName {Elias Talcott}
+\def \myDate {August 31, 2020}
+%%
+%%%
+
+
+\begin{document}
+
+\begin{titlepage}
+\title{\myTitle}
+\author{\myName}
+\date{\myDate}
+\maketitle
+\vspace{1in}
+\tableofcontents
+\thispagestyle{empty}
+\end{titlepage}
+
+
+\section{Photograph and Name}
+My name is Elias Talcott. I am a senior in Computer Engineering. Here is a photo of me at the United Nations in Geneva, Switzerland last December.
+
+\begin{center}
+\includegraphics[width=\linewidth, angle=-90]{Portrait.jpg}
+\end{center}
+
+\pagebreak
+
+\section{Interest and Expectations}
+I took interest in embedded systems during ECE 362. During my internship search, I looked for jobs relating to embedded systems, but found I was lacking in experience even for entry level positions. One thing that stood out to me was that nearly every job posting mentioned real-time operating systems and scheduling. These are subjects I would like to learn more about this semester.
+
+After my internship this summer in software test engineering, I'm not sure if I still want to work in embedded systems. I really enjoyed test engineering and can see myself doing that long-term. However, I hope that this class will bring me back to embedded systems and spark my interest again.
+
+
+\section{Embedded Systems List}
+\begin{enumerate}
+\item Smart phones
+\item Smart watches
+\item Kitchen scales
+\item Microwaves
+\item Traffic signals
+\item Traction control
+\item Anti-lock braking system
+\item GPS
+\item Smart TVs
+\item Point of sale terminals
+\end{enumerate}
+
+\section{Fun Fact}
+I compete in the sport of weightlifting. When I lived in Denmark last fall and winter, I had to opportunity to train the entire semester and lift in a meet with 3 members of the Danish national weightlifting team in a small gym north of Copenhagen. This year, assuming we are able to have competitions, I plan to lift in the American Open Finals in Atlanta, Georgia.
+
+\end{document}
