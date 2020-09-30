@@ -4,3 +4,7 @@
 *.out
 *.synctex.gz
 *.toc
+
+# PyCharm files
+*.idea/
+*__pycache__/
