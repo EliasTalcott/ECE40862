@@ -8,3 +8,6 @@
 # PyCharm files
 *.idea/
 *__pycache__/
+
+# ESP32 MicroPython binary
+esp32*.bin
