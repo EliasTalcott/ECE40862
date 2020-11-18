@@ -1,0 +1,11 @@
+Note: This project was completed using Andres Lynn's MPU module from Piazza (permission granted by instructors for others to use this).
+
+To eliminate switch bounce, I implemented a debounce function which directs the program to "init_sensors" or "run_spinner" based on which switch was pressed. After the other switch is pressed, the program returns from the working function (in order to avoid exceeding maximum number of function calls on stack) and re-enters the debounce function to move into the next state.
+
+In order to calculate the speed of the spinner, I polled the values of x, y, and z acceleration from the MPU every 100ms and added the acceleration times 0.1 to the current speed (initialized to 0). There are correction values added in order to reduce "accelerometer drift", which initially caused the speed values to grow despite there being no movement of the spinner.
+
+When calculating tilt angles, I used a form of dynamic error correction. For the first 2 seconds of initialization, the MPU module collects data on how much the three tilt angles are changing (spinner should be flat and not moving). After 2 seconds, the tilt angles are reset to 0 and calculated correction values are used to reduce the effect gyroscope drift.
+
+Based on my testing (taking into account drift of speed values), it seems that a speed of greater than 3 m/s is an appropriate value at which to turn on the red LED. I also defined "motionless" (state for green LED to be on) as moving less than 1 m/s in each direction, since the precision of the MPU does not allow for very precise measurements.
+
+Upon each initialization cycle, the temperature sensor is polled for an initial value. Then the temperature sensor is polled again every 100ms to decide the frequency at which the onboard LED should be flashed. In the case that the temperature has decreased by 2 degrees or more, the onboard LED is disabled entirely (0/negative frequency = off).
