@@ -3,6 +3,8 @@
 from machine import Pin, I2C, PWM, Timer
 from time import sleep
 import MPU
+import urequests as requests
+import network
 
 # Initialize GPIO
 switch_1 = Pin(33, Pin.IN)
@@ -13,6 +15,7 @@ yellow_led = Pin(32, Pin.OUT)
 green_led = Pin(15, Pin.OUT)
 onboard_led = Pin(13, Pin.OUT)
 demo = False
+cycles = 0
 
 # Initialize I2C and declare sensors
 i2c = I2C(scl=Pin(22), sda=Pin(23))
@@ -29,6 +32,11 @@ speed_x = 0
 speed_y = 0
 speed_z = 0
 speed_timer = Timer(1)
+
+# Initialize lab 6 variables
+url = "https://maker.ifttt.com/trigger/minute_passed/with/key/b3s7y_c2gOufgGmATCTc5i"
+session_id = 100000
+post_timer = Timer(2)
 
 # Debounce switch presses
 def debounce(pin):
@@ -57,6 +65,7 @@ def init_sensors():
     demo = False
     temp_timer.init(period=1000, mode=Timer.PERIODIC, callback=set_freq)
     speed_timer.init(period=100, mode=Timer.PERIODIC, callback=set_speed)
+    post_timer.init(period=60000, mode=Timer.PERIODIC, callback=post_to_ifttt)
     led_on = False
     # Enable onboard LED in standard mode
     onboard_led = Pin(13, Pin.OUT)
@@ -118,7 +127,7 @@ def run_spinner():
             green_led.value(0)
 
 
-def set_speed(p):
+def set_speed(_):
     global speed_x, speed_y, speed_z
     acc_x, acc_y, acc_z = myMpu.acceleration()
     speed_x += (acc_x * 0.1) - 0.0005
@@ -126,7 +135,7 @@ def set_speed(p):
     speed_z += ((acc_z - 9.75) * 0.1) + 0.002
 
 
-def set_freq(p):
+def set_freq(_):
     global cycles
     if demo:
         if led_on:
@@ -134,7 +143,30 @@ def set_freq(p):
         cycles += 1
         print("Pitch: {}, Roll: {}, Yaw: {}, Temperature: {}".format(myMpu.pitch, myMpu.roll, myMpu.yaw, myMpu.temperature()))
 
-cycles = 0
+
+def post_to_ifttt(_):
+    global session_id
+    if demo:
+        # Prepare values for HTTP POST request
+        velocity_values = "{} ||| {} ||| {} ||| {}".format(session_id, speed_x, speed_y, speed_z)
+        angle_values = "{} ||| {} ||| {}".format(myMpu.pitch, myMpu.roll, myMpu.yaw)
+        temp_value = "{}".format(myMpu.temperature())
+        values = {"value1": velocity_values, "value2": angle_values, "value3": temp_value}
+        # Send HTTP POST request
+        requests.post(url, json=values, headers={'Content-Type': 'application/json'})
+        # Increment session ID for next request
+        session_id += 1
+
+
+# Connect to the internet
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+print('Oh Yes! Get connected')
+if not wlan.isconnected():
+    wlan.connect('DESKTOP-ETALCOTT', '12345678')
+    while not wlan.isconnected():
+        pass
+print("Connected to DESKTOP-ETALCOTT")
 
 # Wait for switch 1 press to initialize sensors
 while True:
